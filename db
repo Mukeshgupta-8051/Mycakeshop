@@ -1,0 +1,46 @@
+
+ create database mycakeshop;
+ use mycakeshop;
+create table cake (cakeid int primary key auto_increment, cakename varchar(50) not null, cakeprice int not null, cakeweight int not null,
+cakecategory varchar(50)
+ not null);
+
+ create table customer
+  (cid int primary key auto_increment,
+  cname varchar(50) not null,
+   cemail varchar(100) unique not null,
+  ccontact varchar(10) unique not null,
+   caddress varchar(200) not null,
+  cpassword varchar(15)not null,
+  cconfirmpassword varchar(15)not null);
+
+insert into customer(cname,cemail,ccontact,caddress,cpassword,cconfirmpassword)
+   values('namira','namira12@gmail.com','9874561245','borivali','123','123');
+----------------------------------------------------------------------------------------------------------------
+create table cart (cartid int primary key auto_increment,cakeid int not null, cemail varchar(100)not null);
+-----------------------------------------------------------------------------------------------------------------
+select cakename,cakeprice,cakeweight,cakecategory,cemail from cake inner join cart on cake.cakeid=cart.cakeid;
+------------------------------------------------------------------------------------------------------------------
+create table orders (orderid int primary key auto_increment, ordertotal int not null, orderdate varchar(200)not null,
+orderstatus varchar(20) default 'processing', cemail varchar(100)not null);
+insert into orders(ordertotal,orderdate,cemail) values(1850,'26-05-2021','suman12@gmail.com');
+
+-------------------------------------------------------------------------------------------------------------------------------------
+select sum(cakeprice) from cart inner join cake on cake.cakeid=cart.cakeid  where cemail='suman12@gmail.com';
+------------------------------------------------------------------------------------------------------------------------------
+ create table backupcart
+    (id int primary key auto_increment,
+     cakeid int not null,
+    cemail varchar(100) not null);
+--------------------------------------------------------------------------------------------------------------------------------
+delimiter $
+create trigger deletefromcart after insert on orders for each row begin delete from cart  where cemail=new.cemail; end$
+-----------------------------------------------------------------------------------------------------------------------------------
+ create trigger backupcart before delete on cart for each row
+    begin insert into backupcart(cakeid,cemail)
+    values(old.cakeid,old.cemail)
+     ; end$
+---------------------------------
+delimiter ;
+==============================================
+insert into orders(ordertotal,orderdate,cemail) values(1850,'26-05-2021','suman12@gmail.com');

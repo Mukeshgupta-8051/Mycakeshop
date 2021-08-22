@@ -1,0 +1,6 @@
+1.pip install pymysql
+2.create model class
+    a.Cake
+    b.Customer
+    c.Cart
+    d.Order
